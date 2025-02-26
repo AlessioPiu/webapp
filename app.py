@@ -5,7 +5,8 @@ import os
 app = Flask(__name__)
 
 # Percorso del file Excel aggiornato
-EXCEL_FILE = "C:/Users/alessio.piu/Desktop/app/dati.xlsx"
+import os
+EXCEL_FILE = os.path.join(os.path.dirname(__file__), "dati.xlsx")
 INTERVENTI_SHEET = "interventi"
 
 # Funzione per leggere i dati degli impianti
