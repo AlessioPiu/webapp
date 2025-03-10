@@ -4,37 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestione Interventi</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <div class="container">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
-        <h1>Gestione Interventi</h1>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow p-4">
+            <div class="text-center">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo img-fluid mb-3">
+                <h1 class="text-primary">Gestione Interventi</h1>
+            </div>
 
-        <!-- SELEZIONE IMPIANTO -->
-        <div class="form-container">
-            <div class="form-group">
-                <label>Codice Impianto:</label>
-                <select id="codice" onchange="updateDetails()">
+            <!-- SELEZIONE IMPIANTO -->
+            <div class="mb-3">
+                <label class="form-label">Codice Impianto:</label>
+                <select id="codice" class="form-select" onchange="updateDetails()">
                     <option value="">Seleziona un codice impianto</option>
                     {% for codice in codici %}
                     <option value="{{ codice }}">{{ codice }}</option>
                     {% endfor %}
                 </select>
             </div>
-        </div>
 
-        <div class="details-container" id="details" style="display: none;">
-            <h2>Dettagli Impianto</h2>
-            <textarea id="details-content" readonly></textarea>
-        </div>
+            <div id="details" class="mb-3" style="display: none;">
+                <h2 class="text-secondary">Dettagli Impianto</h2>
+                <textarea id="details-content" class="form-control" readonly></textarea>
+            </div>
 
-        <!-- REGISTRAZIONE INTERVENTO -->
-        <h2>Registrazione Intervento</h2>
-        <div class="form-container">
-            <div class="form-group">
-                <label>Tecnico:</label>
-                <select id="tecnico">
+            <!-- REGISTRAZIONE INTERVENTO -->
+            <h2 class="text-secondary">Registrazione Intervento</h2>
+            <div class="mb-3">
+                <label class="form-label">Tecnico:</label>
+                <select id="tecnico" class="form-select">
                     <option value="">Seleziona un tecnico</option>
                     {% for tecnico in tecnici %}
                     <option value="{{ tecnico }}">{{ tecnico }}</option>
@@ -42,83 +43,26 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label>Data Intervento:</label>
-                <input type="date" id="data_intervento">
+            <div class="mb-3">
+                <label class="form-label">Data Intervento:</label>
+                <input type="date" id="data_intervento" class="form-control">
             </div>
-        </div>
 
-        <div class="form-group">
-            <label>Note:</label>
-            <textarea id="note"></textarea>
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Note:</label>
+                <textarea id="note" class="form-control"></textarea>
+            </div>
 
-        <button onclick="salvaIntervento()">Salva Intervento</button>
-        <p id="message"></p>
+            <button class="btn btn-primary w-100 mb-3" onclick="salvaIntervento()">Salva Intervento</button>
+            <p id="message" class="text-center"></p>
 
-        <div class="button-container">
-            <button onclick="window.location.href='/interventi'">Visualizza Interventi Salvati</button>
+            <div class="text-center">
+                <button class="btn btn-outline-secondary" onclick="window.location.href='/interventi'">Visualizza Interventi Salvati</button>
+            </div>
         </div>
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-    <script>
-        function updateDetails() {
-            let codice = document.getElementById("codice").value;
-
-            if (!codice) {
-                document.getElementById("details").style.display = "none";
-                return;
-            }
-
-            fetch('/get_details', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ codice: codice })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.dettagli_text) {
-                    document.getElementById("details-content").value = data.dettagli_text;
-                    document.getElementById("details").style.display = "block";
-                } else {
-                    document.getElementById("details-content").value = "Nessun dettaglio disponibile";
-                }
-            })
-            .catch(error => {
-                console.error("Errore nel caricamento dei dettagli:", error);
-                document.getElementById("details-content").value = "Errore nel caricamento";
-            });
-        }
-
-        function salvaIntervento() {
-            let codice = document.getElementById("codice").value;
-            let tecnico = document.getElementById("tecnico").value;
-            let data_intervento = document.getElementById("data_intervento").value;
-            let note = document.getElementById("note").value;
-
-            if (!codice || !tecnico || !data_intervento || !note) {
-                document.getElementById("message").innerText = "⚠️ Compila tutti i campi!";
-                document.getElementById("message").style.color = "red";
-                return;
-            }
-
-            fetch('/salva_intervento', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ codice, tecnico, data_intervento, note })
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("message").innerText = data.message;
-                document.getElementById("message").style.color = data.status === "success" ? "green" : "red";
-            })
-            .catch(error => {
-                console.error("Errore nel salvataggio:", error);
-                document.getElementById("message").innerText = "Errore nel salvataggio!";
-                document.getElementById("message").style.color = "red";
-            });
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
