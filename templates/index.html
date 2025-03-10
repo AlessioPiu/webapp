@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <div class="details-container" id="details">
+        <div class="details-container" id="details" style="display: none;">
             <h2>Dettagli Impianto</h2>
             <textarea id="details-content" readonly></textarea>
         </div>
@@ -78,11 +78,16 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById("details-content").value = data.dettagli_text;
-                document.getElementById("details").style.display = "block";
+                if (data.dettagli_text) {
+                    document.getElementById("details-content").value = data.dettagli_text;
+                    document.getElementById("details").style.display = "block";
+                } else {
+                    document.getElementById("details-content").value = "Nessun dettaglio disponibile";
+                }
             })
             .catch(error => {
                 console.error("Errore nel caricamento dei dettagli:", error);
+                document.getElementById("details-content").value = "Errore nel caricamento";
             });
         }
 
@@ -92,6 +97,12 @@
             let data_intervento = document.getElementById("data_intervento").value;
             let note = document.getElementById("note").value;
 
+            if (!codice || !tecnico || !data_intervento || !note) {
+                document.getElementById("message").innerText = "⚠️ Compila tutti i campi!";
+                document.getElementById("message").style.color = "red";
+                return;
+            }
+
             fetch('/salva_intervento', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -100,6 +111,12 @@
             .then(response => response.json())
             .then(data => {
                 document.getElementById("message").innerText = data.message;
+                document.getElementById("message").style.color = data.status === "success" ? "green" : "red";
+            })
+            .catch(error => {
+                console.error("Errore nel salvataggio:", error);
+                document.getElementById("message").innerText = "Errore nel salvataggio!";
+                document.getElementById("message").style.color = "red";
             });
         }
     </script>
