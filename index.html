@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Interventi</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow p-4">
+            <div class="text-center">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo img-fluid mb-3">
+                <h1 class="text-primary">Gestione Interventi</h1>
+            </div>
+
+            <!-- SELEZIONE IMPIANTO -->
+            <div class="mb-3">
+                <label class="form-label">Codice Impianto:</label>
+                <select id="codice" class="form-select" onchange="updateDetails()">
+                    <option value="">Seleziona un codice impianto</option>
+                    {% for codice in codici %}
+                    <option value="{{ codice }}">{{ codice }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- DETTAGLI IMPIANTO -->
+            <div id="details" class="mb-3" style="display: none;">
+                <h2 class="text-secondary">Dettagli Impianto</h2>
+                <table class="table table-striped">
+                    <tbody id="details-table"></tbody>
+                </table>
+            </div>
+
+            <!-- REGISTRAZIONE INTERVENTO -->
+            <h2 class="text-secondary">Registrazione Intervento</h2>
+            <div class="mb-3">
+                <label class="form-label">Tecnico:</label>
+                <select id="tecnico" class="form-select">
+                    <option value="">Seleziona un tecnico</option>
+                    {% for tecnico in tecnici %}
+                    <option value="{{ tecnico }}">{{ tecnico }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Data Intervento:</label>
+                <input type="date" id="data_intervento" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Note:</label>
+                <textarea id="note" class="form-control"></textarea>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="salvaIntervento()">Salva Intervento</button>
+            <p id="message" class="text-center"></p>
+
+            <div class="text-center">
+                <button class="btn btn-outline-secondary" onclick="window.location.href='/interventi'">Visualizza Interventi Salvati</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
